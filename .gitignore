@@ -1,0 +1,56 @@
+# ============================================================
+# DRAVION v.9 — .gitignore
+# ============================================================
+
+# ── Secrets & Credentials ────────────────────────────────────
+.env
+.env.*
+gcloud-key.json
+*.pem
+*.key
+*.p12
+*.jks
+
+# ── System Prompts (contain personal/family information) ─────
+docs/DRAVION_v9_MASTER_PROMPT.md
+Dravion_backend/core/system_prompt.py
+
+# ── Local Databases & User Data ──────────────────────────────
+data/
+Dravion_backend/data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ── Model Weights & Checkpoints (large binaries) ─────────────
+training/dravion-gemma-lora/adapter_model.safetensors
+training/dravion-gemma-lora/tokenizer.json
+training/dravion-gemma-lora/tokenizer.model
+training/dravion-gemma-lora/checkpoint-*/
+
+# ── Python Cache ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# ── Unsloth Compiled Cache ────────────────────────────────────
+unsloth_compiled_cache/
+
+# ── Poetry Lock (reproducible from pyproject.toml) ────────────
+poetry.lock
+
+# ── OS / IDE ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Virtual Environments ──────────────────────────────────────
+.venv/
+venv/
+env/

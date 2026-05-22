@@ -1,0 +1,501 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;
+  --surface:#0f1524;
+  --surface2:#141929;
+  --border:#1e2a40;
+  --border2:#243048;
+  --blue:#3b82f6;
+  --blue-dim:rgba(59,130,246,0.08);
+  --blue-mid:rgba(59,130,246,0.18);
+  --text:#e2e8f0;
+  --text2:#8896b3;
+  --text3:#4a5568;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+}
+.wrap{background:var(--bg);color:var(--text);font-family:var(--font-sans,system-ui,sans-serif);font-size:13px;line-height:1.5;display:grid;grid-template-columns:220px 1fr;grid-template-rows:48px 1fr;height:680px;border:0.5px solid var(--border)}
+
+/* ── TOPBAR ── */
+.topbar{grid-column:1/3;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:0.5px solid var(--border);background:var(--surface)}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.brand-name{font-size:14px;font-weight:500;letter-spacing:0.5px;color:var(--text)}
+.brand-version{font-size:11px;color:var(--text3);margin-left:2px}
+.topbar-right{display:flex;align-items:center;gap:4px}
+.status-chip{font-size:11px;padding:3px 10px;border-radius:4px;border:0.5px solid var(--border2);color:var(--text2);cursor:pointer;background:transparent;transition:background 0.15s,color 0.15s}
+.status-chip:hover{background:var(--surface2);color:var(--text)}
+.status-chip.active{background:var(--blue-dim);border-color:rgba(59,130,246,0.3);color:var(--blue)}
+.online-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--surface);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-section{padding:16px 12px 8px;font-size:10px;font-weight:500;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background 0.15s;color:var(--text2);font-size:13px;border-left:2px solid transparent}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--blue-dim);color:var(--blue);border-left-color:var(--blue)}
+.nav-icon{width:14px;height:14px;flex-shrink:0;opacity:0.7}
+.nav-item.active .nav-icon{opacity:1}
+
+.agent-section{padding:8px 12px;flex:1;overflow:hidden}
+.agent-card{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:6px;margin-bottom:4px;border:0.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:border-color 0.15s}
+.agent-card:hover{border-color:var(--border2)}
+.agent-card.running{border-color:rgba(59,130,246,0.3)}
+.agent-left{display:flex;align-items:center;gap:8px}
+.agent-avatar{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
+.av-dravion{background:var(--blue-dim);color:var(--blue);border:0.5px solid rgba(59,130,246,0.25)}
+.av-ghost{background:rgba(139,92,246,0.1);color:#a78bfa;border:0.5px solid rgba(139,92,246,0.25)}
+.av-sage{background:rgba(245,158,11,0.1);color:#fbbf24;border:0.5px solid rgba(245,158,11,0.25)}
+.av-volt{background:rgba(34,197,94,0.1);color:#4ade80;border:0.5px solid rgba(34,197,94,0.2)}
+.av-luna{background:rgba(236,72,153,0.1);color:#f472b6;border:0.5px solid rgba(236,72,153,0.2)}
+.av-matrix{background:rgba(20,184,166,0.1);color:#2dd4bf;border:0.5px solid rgba(20,184,166,0.2)}
+.agent-info{display:flex;flex-direction:column}
+.agent-name{font-size:12px;font-weight:500;color:var(--text);line-height:1.2}
+.agent-role{font-size:10px;color:var(--text3);line-height:1.2}
+.agent-status{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.s-online{background:var(--green)}
+.s-idle{background:var(--border2)}
+
+.sidebar-footer{padding:12px;border-top:0.5px solid var(--border)}
+.device-row{display:flex;gap:4px}
+.dev-btn{flex:1;font-size:10px;padding:4px 0;border-radius:4px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.15s}
+.dev-btn:hover{color:var(--text);border-color:var(--border2)}
+.dev-btn.active{background:var(--blue-dim);border-color:rgba(59,130,246,0.3);color:var(--blue)}
+
+/* ── MAIN PANEL ── */
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+
+/* Tab bar */
+.tab-bar{display:flex;align-items:center;gap:1px;padding:0 16px;border-bottom:0.5px solid var(--border);background:var(--surface);height:38px;flex-shrink:0}
+.tab{font-size:12px;padding:0 12px;height:38px;display:flex;align-items:center;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:color 0.15s;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* Content area */
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column}
+
+/* ── CHAT VIEW ── */
+.chat-view{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+
+.msg-group{display:flex;flex-direction:column;gap:4px;max-width:72%}
+.msg-group.user{align-self:flex-end;align-items:flex-end}
+.msg-group.assistant{align-self:flex-start;align-items:flex-start}
+
+.msg-meta{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.msg-avatar{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+.msg-sender-name{font-size:11px;color:var(--text3);font-weight:500}
+.msg-time-label{font-size:10px;color:var(--text3)}
+
+.bubble{padding:10px 13px;border-radius:8px;font-size:13px;line-height:1.55;color:var(--text)}
+.bubble.user{background:var(--blue);color:#fff;border-radius:8px 8px 2px 8px}
+.bubble.dravion{background:var(--surface);border:0.5px solid var(--border);border-radius:2px 8px 8px 8px}
+.bubble.ghost{background:var(--surface);border:0.5px solid var(--border);border-left:2px solid #8b5cf6;border-radius:0 8px 8px 0}
+.bubble.sage{background:var(--surface);border:0.5px solid var(--border);border-left:2px solid var(--amber);border-radius:0 8px 8px 0}
+.bubble.volt{background:var(--surface);border:0.5px solid var(--border);border-left:2px solid var(--green);border-radius:0 8px 8px 0}
+
+/* Mission strip */
+.mission-strip{background:var(--surface2);border:0.5px solid var(--border2);border-radius:6px;padding:10px 12px;display:flex;align-items:center;gap:12px;flex-shrink:0;margin:0 16px}
+.mission-label{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.5px;white-space:nowrap}
+.mission-title{font-size:12px;color:var(--text);flex:1}
+.mission-tags{display:flex;gap:4px}
+.tag{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:0.5px solid rgba(59,130,246,0.25)}
+.tag-purple{background:rgba(139,92,246,0.1);color:#a78bfa;border:0.5px solid rgba(139,92,246,0.2)}
+.tag-amber{background:rgba(245,158,11,0.1);color:#fbbf24;border:0.5px solid rgba(245,158,11,0.2)}
+.mission-prog{width:80px;height:3px;background:var(--border);border-radius:2px;flex-shrink:0;overflow:hidden}
+.mission-prog-fill{height:100%;background:var(--blue);border-radius:2px;width:60%}
+
+/* Typing */
+.typing-wrap{display:flex;align-items:center;gap:8px;padding:0 16px 8px}
+.typing-name{font-size:11px;color:var(--text3)}
+.typing-dots{display:flex;gap:3px;align-items:center}
+.typing-dots span{width:4px;height:4px;border-radius:50%;background:var(--text3);animation:td 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+/* Input */
+.input-wrap{border-top:0.5px solid var(--border);padding:12px 16px;background:var(--surface);flex-shrink:0}
+.input-row{display:flex;align-items:center;gap:8px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:8px;padding:6px 8px 6px 12px;transition:border-color 0.15s}
+.input-row:focus-within{border-color:rgba(59,130,246,0.4)}
+.cmd-input{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--text);caret-color:var(--blue)}
+.cmd-input::placeholder{color:var(--text3)}
+.input-actions{display:flex;gap:6px;align-items:center}
+.btn-sm{font-size:11px;padding:5px 11px;border-radius:5px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn-sm:hover{background:var(--surface);color:var(--text)}
+.btn-primary-sm{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-primary-sm:hover{opacity:0.9}
+.voice-indicator{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);padding:5px 10px;border:0.5px solid rgba(34,197,94,0.25);border-radius:5px;background:rgba(34,197,94,0.06);cursor:pointer}
+.vdot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ── VISION VIEW ── */
+.vision-view{flex:1;display:flex;flex-direction:column;gap:12px;padding:16px;overflow-y:auto}
+.vision-feed{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3)}
+.vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vision-meta-card{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:12px}
+.vmeta-label{font-size:10px;color:var(--text3);margin-bottom:6px;font-weight:500;letter-spacing:0.5px}
+.vmeta-val{font-size:13px;color:var(--text)}
+.detection-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.detection-item:last-child{border-bottom:none}
+.det-label{font-size:12px;color:var(--text)}
+.det-conf{font-size:11px;color:var(--green);font-weight:500}
+
+/* ── STATS VIEW ── */
+.stats-view{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;overflow-y:auto;align-content:start}
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:14px}
+.stat-label{font-size:10px;color:var(--text3);margin-bottom:8px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.stat-val{font-size:24px;font-weight:500;color:var(--text);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.mini-bar{height:3px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden}
+.mini-fill{height:100%;border-radius:2px;background:var(--blue)}
+.mini-fill.green{background:var(--green)}
+.mini-fill.amber{background:var(--amber)}
+
+.mem-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.mem-row:last-child{border-bottom:none}
+.mem-badge{font-size:9px;font-weight:500;padding:2px 6px;border-radius:3px;flex-shrink:0;margin-top:1px}
+.mb-fact{background:var(--blue-dim);color:var(--blue)}
+.mb-pref{background:rgba(245,158,11,0.1);color:#fbbf24}
+.mb-task{background:rgba(34,197,94,0.08);color:var(--green)}
+.mem-text{font-size:12px;color:var(--text2);line-height:1.4}
+
+.active-view{display:flex;flex-direction:column}
+.hidden-view{display:none}
+</style>
+
+<h2 class="sr-only">DRAVION workspace interface with sidebar navigation, chat panel showing multi-agent conversation, vision mode, and system stats</h2>
+
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-dot"></div>
+      <span class="brand-name">Dravion</span>
+      <span class="brand-version">v2</span>
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:var(--text3);margin-right:8px"><span class="online-dot"></span>Online · 4 brains active</span>
+      <button class="status-chip active" onclick="switchTab('chat',this)">Chat</button>
+      <button class="status-chip" onclick="switchTab('vision',this)">Vision</button>
+      <button class="status-chip" onclick="switchTab('stats',this)">Stats</button>
+      <button class="status-chip" onclick="switchTab('memory',this)">Memory</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <div class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M8 2l6 6-6 6"/></svg>
+      Command center
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      Tasks
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10H2M10 6H6M12 2H4"/></svg>
+      Research
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L2 6v8h4v-4h4v4h4V6z"/></svg>
+      Home control
+    </div>
+
+    <div class="sidebar-section">Agent fleet</div>
+    <div class="agent-section">
+      <div class="agent-card running">
+        <div class="agent-left">
+          <div class="agent-avatar av-dravion">DR</div>
+          <div class="agent-info">
+            <div class="agent-name">Dravion</div>
+            <div class="agent-role">Orchestrator</div>
+          </div>
+        </div>
+        <div class="agent-status s-online"></div>
+      </div>
+      <div class="agent-card running">
+        <div class="agent-left">
+          <div class="agent-avatar av-ghost">GH</div>
+          <div class="agent-info">
+            <div class="agent-name">Ghost</div>
+            <div class="agent-role">Cybersecurity</div>
+          </div>
+        </div>
+        <div class="agent-status s-online"></div>
+      </div>
+      <div class="agent-card running">
+        <div class="agent-left">
+          <div class="agent-avatar av-sage">SA</div>
+          <div class="agent-info">
+            <div class="agent-name">Sage</div>
+            <div class="agent-role">Research</div>
+          </div>
+        </div>
+        <div class="agent-status s-online"></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-left">
+          <div class="agent-avatar av-volt">VT</div>
+          <div class="agent-info">
+            <div class="agent-name">Volt</div>
+            <div class="agent-role">Engineering</div>
+          </div>
+        </div>
+        <div class="agent-status s-idle"></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-left">
+          <div class="agent-avatar av-luna">LN</div>
+          <div class="agent-info">
+            <div class="agent-name">Luna</div>
+            <div class="agent-role">Creative</div>
+          </div>
+        </div>
+        <div class="agent-status s-idle"></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-left">
+          <div class="agent-avatar av-matrix">MX</div>
+          <div class="agent-info">
+            <div class="agent-name">Matrix</div>
+            <div class="agent-role">Analytics</div>
+          </div>
+        </div>
+        <div class="agent-status s-idle"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase">Active device</div>
+      <div class="device-row">
+        <button class="dev-btn active" onclick="setDevice(this)">Glasses</button>
+        <button class="dev-btn" onclick="setDevice(this)">Watch</button>
+        <button class="dev-btn" onclick="setDevice(this)">Phone</button>
+        <button class="dev-btn" onclick="setDevice(this)">PC</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <div class="tab active" id="tab-label">Conversation</div>
+      <div style="flex:1"></div>
+      <div style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:12px">
+        <span>Gemini 2.5 Pro · Groq · DeepSeek</span>
+        <span style="color:var(--green)">All systems nominal</span>
+      </div>
+    </div>
+
+    <!-- CHAT VIEW -->
+    <div class="content active-view" id="view-chat">
+      <div style="padding:8px 16px 0;flex-shrink:0">
+        <div class="mission-strip">
+          <span class="mission-label">Mission</span>
+          <span class="mission-title">Network security audit — home server</span>
+          <div class="mission-tags">
+            <span class="tag tag-purple">Ghost</span>
+            <span class="tag tag-amber">Sage</span>
+          </div>
+          <div class="mission-prog"><div class="mission-prog-fill"></div></div>
+          <span style="font-size:10px;color:var(--text3);white-space:nowrap">60%</span>
+        </div>
+      </div>
+
+      <div class="chat-view">
+
+        <div class="msg-group assistant">
+          <div class="msg-meta">
+            <div class="msg-avatar av-dravion">DR</div>
+            <span class="msg-sender-name">Dravion</span>
+            <span class="msg-time-label">14:21</span>
+          </div>
+          <div class="bubble dravion">Initiating network audit, Boss. Assigning Ghost for active scanning and Sage for threat cross-referencing. Running in parallel — should wrap in under 90 seconds.</div>
+        </div>
+
+        <div class="msg-group user">
+          <div class="msg-meta" style="justify-content:flex-end">
+            <span class="msg-time-label">14:21</span>
+            <span class="msg-sender-name">Dhruvam</span>
+          </div>
+          <div class="bubble user">Focus on open ports and flag anything outdated.</div>
+        </div>
+
+        <div class="msg-group assistant">
+          <div class="msg-meta">
+            <div class="msg-avatar av-ghost">GH</div>
+            <span class="msg-sender-name" style="color:#a78bfa">Ghost</span>
+            <span class="msg-time-label">14:22</span>
+          </div>
+          <div class="bubble ghost">Scan complete. 3 hosts on 192.168.1.x. Port 8080 open on .5 — Tomcat 9.0.31. That version carries CVE-2020-9484, remote code execution via deserialization. CVSS 7.5. Patch it.</div>
+        </div>
+
+        <div class="msg-group assistant">
+          <div class="msg-meta">
+            <div class="msg-avatar av-sage">SA</div>
+            <span class="msg-sender-name" style="color:#fbbf24">Sage</span>
+            <span class="msg-time-label">14:22</span>
+          </div>
+          <div class="bubble sage">Confirmed. CVE-2020-9484 affects Tomcat 9.0.0 through 9.0.34. Patch available in 9.0.35+. Ghost's assessment is accurate — this should be treated as critical on a home server running Dravion.</div>
+        </div>
+
+        <div class="msg-group assistant">
+          <div class="msg-meta">
+            <div class="msg-avatar av-dravion">DR</div>
+            <span class="msg-sender-name">Dravion</span>
+            <span class="msg-time-label">14:23</span>
+          </div>
+          <div class="bubble dravion">Mission complete. One critical finding — Tomcat vulnerability on .5. Want me to route to Volt for a patch script, or handle it manually?</div>
+        </div>
+
+      </div>
+
+      <div class="typing-wrap">
+        <span class="typing-name">Dravion is thinking</span>
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="input-wrap">
+        <div class="input-row">
+          <input class="cmd-input" id="cmdInput" placeholder="Message Dravion..." />
+          <div class="input-actions">
+            <button class="btn-sm" onclick="sendCmd()">Vision on</button>
+            <div class="voice-indicator" title="Voice active">
+              <div class="vdot"></div>
+              Listening
+            </div>
+            <button class="btn-sm btn-primary-sm" onclick="sendCmd()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISION VIEW -->
+    <div class="content hidden-view" id="view-vision">
+      <div class="vision-view">
+        <div class="vision-feed">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>
+          <span style="font-size:13px">Glasses camera feed</span>
+          <span style="font-size:11px;color:var(--text3)">Connect glasses to activate live vision</span>
+          <button class="btn-sm btn-primary-sm" style="margin-top:4px" onclick="sendPrompt('How do I connect my glasses to Dravion vision mode?') ↗">Connect device ↗</button>
+        </div>
+        <div class="vision-grid">
+          <div class="vision-meta-card">
+            <div class="vmeta-label">Last capture</div>
+            <div class="vmeta-val" style="margin-bottom:10px">Tech park — robot exhibit</div>
+            <div class="detection-item"><span class="det-label">Humanoid robot</span><span class="det-conf">94%</span></div>
+            <div class="detection-item"><span class="det-label">Omnidirectional wheels</span><span class="det-conf">87%</span></div>
+            <div class="detection-item"><span class="det-label">LIDAR sensor array</span><span class="det-conf">81%</span></div>
+            <div class="detection-item"><span class="det-label">Servo actuators</span><span class="det-conf">76%</span></div>
+          </div>
+          <div class="vision-meta-card">
+            <div class="vmeta-label">Dravion analysis</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.6">Detected a legless humanoid robot using an omnidirectional wheel base. Likely uses ROS2 with onboard LIDAR for navigation. No external leg actuators — balance maintained by gyroscopic stabilization.</div>
+            <button class="btn-sm" style="margin-top:10px;width:100%;text-align:center" onclick="sendPrompt('Generate a 3D model based on the robot we just analyzed') ↗">Generate 3D model ↗</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS VIEW -->
+    <div class="content hidden-view" id="view-stats">
+      <div class="stats-view">
+        <div class="stat-card">
+          <div class="stat-label">CPU usage</div>
+          <div class="stat-val">34<span style="font-size:14px;color:var(--text3)">%</span></div>
+          <div class="stat-sub">4 cores · Dravion process</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:34%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">RAM</div>
+          <div class="stat-val">6.2<span style="font-size:14px;color:var(--text3)">GB</span></div>
+          <div class="stat-sub">of 16 GB · 58% used</div>
+          <div class="mini-bar"><div class="mini-fill amber" style="width:58%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Response latency</div>
+          <div class="stat-val" style="color:var(--green)">112<span style="font-size:14px;color:var(--text3)">ms</span></div>
+          <div class="stat-sub">Groq · Llama 3.3 70B</div>
+          <div class="mini-bar"><div class="mini-fill green" style="width:15%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Memory entries</div>
+          <div class="stat-val">2,418</div>
+          <div class="stat-sub">ChromaDB · 3 collections</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:48%"></div></div>
+        </div>
+        <div class="stat-card" style="grid-column:1/3">
+          <div class="stat-label">Active brains</div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <span class="tag tag-blue">Gemini 2.5 Pro · orchestrator</span>
+            <span class="tag tag-blue">Groq Llama 3.3 · speed</span>
+            <span class="tag" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:0.5px solid rgba(139,92,246,0.2)">DeepSeek local · Ghost</span>
+            <span class="tag tag-amber">OpenRouter · fallback</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORY VIEW -->
+    <div class="content hidden-view" id="view-memory">
+      <div style="padding:16px;overflow-y:auto;flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:13px;font-weight:500;color:var(--text)">Recent memories</span>
+          <button class="btn-sm" onclick="sendPrompt('Search my memories for ↗')">Search ↗</button>
+        </div>
+        <div class="mem-row"><span class="mem-badge mb-fact">Fact</span><span class="mem-text">CVE-2020-9484 found on 192.168.1.5 — Tomcat 9.0.31 running on port 8080</span></div>
+        <div class="mem-row"><span class="mem-badge mb-task">Task</span><span class="mem-text">Patch Tomcat to 9.0.35+ on home server</span></div>
+        <div class="mem-row"><span class="mem-badge mb-pref">Pref</span><span class="mem-text">Boss prefers brief, direct responses — no preamble</span></div>
+        <div class="mem-row"><span class="mem-badge mb-fact">Fact</span><span class="mem-text">Home network has 3 active hosts on 192.168.1.x subnet</span></div>
+        <div class="mem-row"><span class="mem-badge mb-task">Task</span><span class="mem-text">DRAVION v2 build — currently on Phase 3 (agentic loop)</span></div>
+        <div class="mem-row"><span class="mem-badge mb-pref">Pref</span><span class="mem-text">Prefers Hinglish for casual conversation, English for technical</span></div>
+        <div class="mem-row"><span class="mem-badge mb-fact">Fact</span><span class="mem-text">Robot at tech park — omnidirectional wheel base, LIDAR navigation, ROS2</span></div>
+        <div class="mem-row"><span class="mem-badge mb-task">Task</span><span class="mem-text">Generate 3D model of robot from vision session</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const views={chat:'view-chat',vision:'view-vision',stats:'view-stats',memory:'view-memory'};
+const tabLabels={chat:'Conversation',vision:'Vision mode',stats:'System stats',memory:'Memory'};
+function switchTab(name,btn){
+  document.querySelectorAll('.status-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  Object.values(views).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.className='content '+(id===views[name]?'active-view':'hidden-view');}
+  });
+  const lbl=document.getElementById('tab-label');
+  if(lbl)lbl.textContent=tabLabels[name]||name;
+}
+function setDevice(btn){
+  document.querySelectorAll('.dev-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function sendCmd(){
+  const input=document.getElementById('cmdInput');
+  const val=input.value.trim();
+  if(!val)return;
+  sendPrompt(val);
+  input.value='';
+}
+document.getElementById('cmdInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter')sendCmd();
+});
+const chat=document.querySelector('.chat-view');
+if(chat)chat.scrollTop=chat.scrollHeight;
+</script>

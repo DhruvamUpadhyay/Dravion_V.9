@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRAVION v.9</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="scanline"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">DRAVION<span>v9 · AUTONOMOUS CORE</span></div>
+    <button class="btn-new" onclick="newSession()">+ NEW</button>
+  </div>
+  <div class="session-list" id="sessionList"></div>
+  <div class="sidebar-footer">
+    <div class="fleet-label">AGENT FLEET</div>
+    <div class="agent-row"><div class="agent-dot on"></div><div><div class="agent-name">DRAVION</div><div class="agent-role">Orchestrator</div></div></div>
+    <div class="agent-row"><div class="agent-dot on"></div><div><div class="agent-name">GHOST</div><div class="agent-role">Cybersecurity</div></div></div>
+    <div class="agent-row"><div class="agent-dot on"></div><div><div class="agent-name">SAGE</div><div class="agent-role">Research</div></div></div>
+    <div class="agent-row"><div class="agent-dot on"></div><div><div class="agent-name">VOLT</div><div class="agent-role">Engineering</div></div></div>
+    <div class="agent-row"><div class="agent-dot standby"></div><div><div class="agent-name">LUNA</div><div class="agent-role">Creative</div></div></div>
+    <div class="agent-row"><div class="agent-dot standby"></div><div><div class="agent-name">MATRIX</div><div class="agent-role">Analytics</div></div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="status-pill status-on">ONLINE</div>
+      <div class="topbar-tabs">
+        <button class="tab-btn active" data-tab="comms">COMMS</button>
+        <button class="tab-btn" data-tab="vision">VISION</button>
+      </div>
+    </div>
+    <div class="topbar-stats">
+      <div class="stat"><div class="stat-label">UPTIME</div><div class="stat-val" id="uptimeVal">00:00:00</div></div>
+      <div class="stat"><div class="stat-label">BRAIN</div><div class="stat-val" id="brainVal">AUTO</div></div>
+    </div>
+  </div>
+
+  <!-- COMMS TAB -->
+  <div class="tab-content active" id="tab-comms">
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-orb"></div>
+      <div class="welcome-text">D·R·A·V·I·O·N</div>
+      <div class="welcome-sub">Issue a command to begin, Boss.</div>
+    </div>
+    <div class="chat-area" id="chatArea" style="display:none"></div>
+    <div class="typing" id="typing">
+      <div class="typing-label">DRAVION</div>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+    <div class="input-bar">
+      <div class="input-mode">CMD</div>
+      <input class="input-field" id="cmdInput" placeholder="Issue a command, Boss..." autocomplete="off">
+      <button class="btn-send" onclick="sendCmd()">SEND</button>
+    </div>
+  </div>
+
+  <!-- VISION TAB -->
+  <div class="tab-content" id="tab-vision">
+    <div class="vision-area">
+      <div style="text-align:center">
+        <div class="vision-frame" style="display:inline-block">
+          <img id="visionImg" style="display:none" alt="Screenshot">
+          <div id="visionEmpty" class="vision-empty">No capture yet. Click below to take a screenshot.</div>
+        </div>
+        <br>
+        <button class="btn-capture" onclick="captureScreen()">CAPTURE SCREEN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<aside class="right-panel">
+  <div class="rp-section">
+    <div class="rp-label">SYSTEM HEALTH</div>
+    <div style="margin-bottom:10px">
+      <div class="rp-sub">CPU</div>
+      <div class="rp-val" style="font-size:15px" id="cpuVal">--%</div>
+      <div class="bar-track"><div class="bar-fill bar-cyan" id="cpuBar" style="width:0%"></div></div>
+    </div>
+    <div>
+      <div class="rp-sub">RAM</div>
+      <div class="rp-val" style="font-size:15px" id="ramVal">--GB</div>
+      <div class="bar-track"><div class="bar-fill bar-amber" id="ramBar" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="rp-section">
+    <div class="rp-label">BRAIN MODE</div>
+    <div class="mode-grid">
+      <button class="mode-btn active" data-mode="auto">AUTO</button>
+      <button class="mode-btn" data-mode="cloud">GROQ</button>
+      <button class="mode-btn" data-mode="gemini">GEMINI</button>
+      <button class="mode-btn" data-mode="local">LOCAL</button>
+    </div>
+  </div>
+  <div class="rp-section" style="flex:1">
+    <div class="rp-label">CAPABILITIES</div>
+    <div style="font-family:var(--fh);font-size:9px;color:var(--txt-d);line-height:1.8">
+      <div>&#9670; App Launcher (146 indexed)</div>
+      <div>&#9670; Gmail &amp; Calendar</div>
+      <div>&#9670; System Control</div>
+      <div>&#9670; Web Search</div>
+      <div>&#9670; File Operations</div>
+      <div>&#9670; Task Manager</div>
+      <div>&#9670; Screen Capture</div>
+      <div>&#9670; Translate</div>
+    </div>
+  </div>
+</aside>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

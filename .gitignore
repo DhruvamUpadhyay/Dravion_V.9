@@ -5,6 +5,7 @@
 # ── Secrets & Credentials ────────────────────────────────────
 .env
 .env.*
+!.env.example
 gcloud-key.json
 *.pem
 *.key
